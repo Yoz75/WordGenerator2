@@ -25,6 +25,8 @@ namespace WG2.Generation
         /// </summary>
         public int MinimalNextTokenAppearances;
 
+        public bool LogDebugInfo;
+
         public GeneratorSettings()
         {
         }

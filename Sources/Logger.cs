@@ -14,6 +14,11 @@ namespace WG2
             Log($"Error: {message}", ConsoleColor.Red);
         }
 
+        public static void LogDebug(string message)
+        {
+            Log($"Debug: {message}", ConsoleColor.Magenta);
+        }
+
         private static void Log(string message, ConsoleColor color)
         {
             var consoleColor = Console.ForegroundColor;

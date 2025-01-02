@@ -21,6 +21,7 @@ namespace WG2
             public const string TokensRandomChance = "tr=";
             public const string FunRecreationsCount = "fr=";
             public const string UseHighestPriority = "hp";
+            public const string DebugInfo = "debinf";
         }
 
         private const string SourceFilesFolder = "Sources";
@@ -111,6 +112,11 @@ namespace WG2
                     }
                     Process thisProcess = Process.GetCurrentProcess();
                     thisProcess.PriorityClass = ProcessPriorityClass.High;
+                }
+                else if(arg.StartsWith(Arguments.DebugInfo))
+                {
+                    generatorSettings.LogDebugInfo = true;
+                    tokenizerSettings.LogDebugInfo = true;
                 }
             }
             #endregion

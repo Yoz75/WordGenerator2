@@ -18,6 +18,8 @@ namespace WG2.Tokenization
         /// </summary>
         public int ResultCapacity = 100;
 
+        public bool LogDebugInfo;
+
         public TokenizerSettings()
         {
         }
