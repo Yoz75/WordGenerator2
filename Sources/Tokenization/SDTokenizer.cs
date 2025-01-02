@@ -54,8 +54,22 @@ namespace WG2.Tokenization
                         string prevTokenValue = text.Substring(startPrevTokenIndex, tokenSize);
                         Token prevToken = tokens[prevTokenValue];
                         prevToken.SubsequentTokens[j].Add(token);
+
+                        const int baseFrequency = 20;
+                        int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
+                        if(settings.LogDebugInfo)
+                        {
+                            if(i % tokenLogFrequency == 0)
+                            {
+                                Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
+                            }
+                        }
                     }
                 }
+            }
+            if(settings.LogDebugInfo)
+            {
+                Logger.LogDebug($"Total tokens created: {result.Count}\n");
             }
             return result.ToArray();
         }
