@@ -127,7 +127,23 @@ namespace WG2
             var tokens= tokenizer.Tokenize(tokenizerSettings, input);
 
             IGenerator generator = new SGenerator();
-            Logger.LogMessage(generator.Generate(generatorSettings, tokens));
+
+            string result = "";
+
+            if(funRecreationsCount > 0)
+            {
+                for(int i = 0; i < funRecreationsCount; i++)
+                {
+
+                result = generator.Generate(generatorSettings, tokens);
+                tokens = tokenizer.Tokenize(tokenizerSettings, result);
+                }
+            }
+            else
+            { 
+                result = generator.Generate(generatorSettings, tokens);
+            }
+            Logger.LogMessage(result);
             Console.ReadLine();
         }
     }
