@@ -9,6 +9,11 @@ namespace WG2
             Log(message, ConsoleColor.White);
         }
 
+        public static void LogWarning(string message)
+        {
+            Log($"Warning: {message}", ConsoleColor.DarkYellow);
+        }
+
         public static void LogError(string message)
         {
             Log($"Error: {message}", ConsoleColor.Red);
