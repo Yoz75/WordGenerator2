@@ -128,6 +128,10 @@ namespace WG2
                 {
                     tokenizer = new SSTokenizer();
                 }
+                else
+                {
+                    Logger.LogWarning($"wg2 does not contains parameter \"{arg}\", is this a typo?");
+                }
             }
             #endregion
             
