@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace WG2.Generation
@@ -35,67 +34,50 @@ namespace WG2.Generation
             } while(IsBadToken(token));
         }
 
-        private Token GetNextToken(Token token, int nextTokensCount, Token[] grabIfNull)
+        private Token GetNextToken(Token token,int subTokenIndex, int nextTokensCount, Token[] grabIfNull)
         {
             int nextTokenIndex = 0;
             nextTokenIndex = Random.Next(0, nextTokensCount);
-            if(nextTokenIndex >= token.SubsequentTokens[0].Count)
+            if(nextTokenIndex >= token.SubsequentTokens[subTokenIndex].Count)
             {
-                nextTokenIndex = token.SubsequentTokens[0].Count - 1;
+                nextTokenIndex = token.SubsequentTokens[subTokenIndex].Count - 1;
             }
             if(nextTokenIndex < 0)
             {
                 PickRandom(ref token, grabIfNull);
                 return token;
             }
-            return token.SubsequentTokens[0][nextTokenIndex];
+            return token.SubsequentTokens[subTokenIndex][nextTokenIndex];
         }
 
         public string Generate(GeneratorSettings settings, Token[] tokens)
         {
             StringBuilder sb = new StringBuilder();
             Token thisToken = null;
-            Queue<Token> previousTokens = new Queue<Token>();
-            for(int i = 0; i < settings.SubsequentTokensCount; i++)
-            {
-                previousTokens.Enqueue(null);
-            }
             for(int i = 0; i < settings.TokensGenerateCount; i++)
             {
                 if(IsBadToken(thisToken) || Random.Next(0, 100) < settings.RandomNextTokenChance)
                 {
                     PickRandom(ref thisToken, tokens);
+                    sb.Append(thisToken.Value);
                 }
 
-                sb.Append(thisToken.Value);
-
-                Token nextToken = GetNextToken(thisToken, settings.NextTokensCount, tokens);
-                if(i != 0)
+                Token nextToken = thisToken;
+                for(int j = 0; j < settings.SubsequentTokensCount; j++)
                 {
-                    int nextTokenAppearances = 0;
-                    do
+                    nextToken = GetNextToken(thisToken, j, settings.NextTokensCount, tokens);
+                    if(settings.LogDebugInfo)
                     {
-                        nextToken = GetNextToken(thisToken, settings.NextTokensCount, tokens);
-                        nextTokenAppearances = 0;
-                        for(int j = previousTokens.Count - 1; j >= 0; j--)
-                        {
-                            Token previousToken = previousTokens.ToArray()[j]; //oh god, that is such bullshit
-                            if(previousToken == null)
-                            {
-                                //if previous token is null, we can neglect it
-                                nextTokenAppearances++;
-                                continue;
-                            }
-                            if(previousToken.SubsequentTokens[j].Contains(nextToken))
-                            {
-                                nextTokenAppearances++;
-                            }
-                        }
-                    } while(nextTokenAppearances < settings.MinimalNextTokenAppearances);
+                        Logger.LogDebug($"this token: {thisToken.Value} next token: {nextToken.Value} token dimension: {j}");
+                    }
+                    sb.Append(nextToken.Value);
+                    if(j == settings.SubsequentTokensCount - 1)
+                    { 
+                        i += j; //we generated some tokens, so add generated tokens count to i
+                        thisToken = nextToken;
+                    }
                 }
-                previousTokens.Dequeue();
-                previousTokens.Enqueue(thisToken);
-                thisToken = nextToken;
+
             }
             return sb.ToString();
         }
