@@ -19,6 +19,7 @@ namespace WG2
             public const string TokensGenerate = "tg=";
             public const string TokensNext = "tn=";
             public const string TokensRandomChance = "tr=";
+            public const string TokenSpaceSeparated = "tsp";
             public const string FunRecreationsCount = "fr=";
             public const string UseHighestPriority = "hp";
             public const string DebugInfo = "debinf";
@@ -52,6 +53,10 @@ namespace WG2
             generatorSettings.SubsequentTokensCount = 1;
             generatorSettings.MinimalNextTokenAppearances = 0;
 
+            ITokenizer tokenizer = new SDTokenizer();
+            IGenerator generator = new SGenerator();
+
+            bool logDebugInfo = false;
             bool isShallReadFile = false;
             string currentDirectory = Directory.GetCurrentDirectory();
             string filePath = null;
@@ -117,16 +122,24 @@ namespace WG2
                 {
                     generatorSettings.LogDebugInfo = true;
                     tokenizerSettings.LogDebugInfo = true;
+                    logDebugInfo = true;
+                }
+                else if(arg.StartsWith(Arguments.TokenSpaceSeparated))
+                {
+                    tokenizer = new SSTokenizer();
                 }
             }
             #endregion
             
+            if(logDebugInfo)
+            {
+                Logger.LogDebug($"Tokenizer: {tokenizer}, Generator: {generator}\n");
+            }
+
             string input = isShallReadFile ? File.ReadAllText(filePath) : Console.ReadLine();
 
-            ITokenizer tokenizer = new SDTokenizer();
             var tokens= tokenizer.Tokenize(tokenizerSettings, input);
 
-            IGenerator generator = new SGenerator();
 
             string result = "";
 
@@ -135,8 +148,8 @@ namespace WG2
                 for(int i = 0; i < funRecreationsCount; i++)
                 {
 
-                result = generator.Generate(generatorSettings, tokens);
-                tokens = tokenizer.Tokenize(tokenizerSettings, result);
+                    result = generator.Generate(generatorSettings, tokens);
+                    tokens = tokenizer.Tokenize(tokenizerSettings, result);
                 }
             }
             else
