@@ -18,13 +18,6 @@ namespace WG2.Generation
         public byte RandomNextTokenChance;
 
         public int SubsequentTokensCount;
-        public int MaxNextTokenSeekIterations = 15;
-
-        /// <summary>
-        /// At least this count of next token appearances should be to add it to result.
-        /// </summary>
-        public int MinimalNextTokenAppearances;
-
         public bool LogDebugInfo;
 
         public GeneratorSettings()

@@ -15,7 +15,6 @@ namespace WG2
             public const string TokenMinimalSize = "tmis=";
             public const string TokenMaximalSize = "tmas=";
             public const string SubsequentTokensCount = "tsc=";
-            public const string TokenMinimalAppears = "ta=";
             public const string TokensGenerate = "tg=";
             public const string TokensNext = "tn=";
             public const string TokensRandomChance = "tr=";
@@ -51,7 +50,6 @@ namespace WG2
             generatorSettings.NextTokensCount = 10;
             generatorSettings.RandomNextTokenChance = 0;
             generatorSettings.SubsequentTokensCount = 1;
-            generatorSettings.MinimalNextTokenAppearances = 0;
 
             ITokenizer tokenizer = new SDTokenizer();
             IGenerator generator = new SGenerator();
@@ -87,10 +85,6 @@ namespace WG2
                 {
                     tokenizerSettings.SubsequentTokensCount = int.Parse(GetArgumentParameter(Arguments.SubsequentTokensCount, arg));
                     generatorSettings.SubsequentTokensCount = int.Parse(GetArgumentParameter(Arguments.SubsequentTokensCount, arg));
-                }
-                else if(arg.StartsWith(Arguments.TokenMinimalAppears))
-                {
-                    generatorSettings.MinimalNextTokenAppearances = int.Parse(GetArgumentParameter(Arguments.TokenMinimalAppears, arg));
                 }
                 else if(arg.StartsWith(Arguments.TokensGenerate))
                 {
