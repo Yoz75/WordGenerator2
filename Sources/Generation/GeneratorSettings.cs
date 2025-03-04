@@ -15,7 +15,7 @@ namespace WG2.Generation
         /// <summary>
         /// 0..100 chance that next token will be chosen randomly from tokens array
         /// </summary>
-        public byte RandomNextTokenChance;
+        public double RandomNextTokenChance;
 
         public int SubsequentTokensCount;
         public bool LogDebugInfo;

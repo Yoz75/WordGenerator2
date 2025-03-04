@@ -56,7 +56,7 @@ namespace WG2.Generation
             Token thisToken = null;
             for(int i = 0; i < settings.TokensGenerateCount; i++)
             {
-                if(IsBadToken(thisToken) || Random.Next(0, 100) < settings.RandomNextTokenChance)
+                if(IsBadToken(thisToken) || Random.NextDouble() < settings.RandomNextTokenChance)
                 {
                     PickRandom(ref thisToken, tokens);
                     sb.Append(thisToken.Value);

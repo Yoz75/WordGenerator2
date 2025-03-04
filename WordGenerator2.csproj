@@ -18,4 +18,8 @@
     <Deterministic>True</Deterministic>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommandAppInterface" Version="1.0.1" />
+  </ItemGroup>
+
 </Project>
