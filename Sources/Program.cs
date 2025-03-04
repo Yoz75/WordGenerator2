@@ -40,6 +40,7 @@ namespace WG2
             string sourcesDirectory = Path.Combine(Directory.GetCurrentDirectory(), SourceFilesFolder);
 
             AppInterface wg2Interface = new("Word Generator 2", isCatchExceptions: true);
+            #region Commands
             wg2Interface.AddCommand(new Command<string>(
                 "run",
                 "process input and generate result.",
@@ -198,10 +199,12 @@ namespace WG2
                             break;
                         case "size": //size separating is default
                         default:
+                            tokenizer = new SDTokenizer();
                             break;
                     }
                 },
                 "\"separate [size/space]\""));
+            #endregion
             wg2Interface.Start();
         }
     }
