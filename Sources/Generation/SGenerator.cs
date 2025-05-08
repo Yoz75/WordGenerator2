@@ -69,7 +69,10 @@ namespace WG2.Generation
                     if(settings.LogDebugInfo)
                     {
                         Logger.LogDebug($"this token: {thisToken.Value} next token: {nextToken.Value} token dimension: {j}");
+                        //separating tokens
+                        sb.Append('|');
                     }
+
                     sb.Append(nextToken.Value);
                     if(j == settings.SubsequentTokensCount - 1)
                     { 
