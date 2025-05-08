@@ -190,7 +190,8 @@ namespace WG2
             wg2Interface.AddCommand(new Command<string>
                 (
                 "separate",
-                "separate tokens by another type (size - fixed token size; space - every token is a word)",
+                "separate tokens by another type (size - fixed token size; space - every token is a word; " +
+                "rand - random token size (between tmin and tmax)",
                 (separateType) =>
                 {
                     switch(separateType)
@@ -198,13 +199,16 @@ namespace WG2
                         case "space":
                             tokenizer = new SSTokenizer();
                             break;
+                        case "rand":
+                            tokenizer = new RDTokenizer();
+                            break;
                         case "size": //size separating is default
                         default:
                             tokenizer = new SDTokenizer();
                             break;
                     }
                 },
-                "\"separate [size/space]\""));
+                "\"separate [size/space/rand]\""));
             #endregion
             wg2Interface.Start();
         }
