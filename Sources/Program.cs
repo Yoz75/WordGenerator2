@@ -21,6 +21,8 @@ namespace WG2
 
         private static void Main(string[] args)
         {
+            Console.InputEncoding = System.Text.Encoding.Unicode;
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
             TokenizerSettings tokenizerSettings = new TokenizerSettings();
             tokenizerSettings.SubsequentTokensCount = 1;
             tokenizerSettings.MinimalTokenSize = 3;
