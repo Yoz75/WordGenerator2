@@ -66,7 +66,6 @@ namespace WG2
                     {
                         for(int i = 0; i < funRecreationsCount; i++)
                         {
-
                             result = generator.Generate(generatorSettings, tokens);
                             tokens = tokenizer.Tokenize(tokenizerSettings, result);
                         }
