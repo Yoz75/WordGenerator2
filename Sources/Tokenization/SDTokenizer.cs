@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WG2.Tokenization
@@ -10,22 +9,23 @@ namespace WG2.Tokenization
     /// </summary>
     public class SDTokenizer : ITokenizer
     {
-        public Token[] Tokenize(TokenizerSettings settings, string text)
+        public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
         {
             if(settings.MinimalTokenSize != settings.MaximalTokenSize)
             {
+                
                 throw new ArgumentException("MinimalTokenSize and MaximalToken size must have " +
                     $"same values, but MinimalTokenSize is {settings.MinimalTokenSize} and " +
                     $"MaximalTokenSize is {settings.MaximalTokenSize}!!!!!!!");
             }
-            int tokenSize = settings.MinimalTokenSize; //actually you can use settings.MaximalToken size,
-                                                       //they are equals
-            List<Token> result = new List<Token>(settings.ResultCapacity);
+
+            int tokenSize = settings.MinimalTokenSize; // actually you can use settings.MaximalToken size, they are equals
+            DirectedGraph<Token> graph = new DirectedGraph<Token>();
             Dictionary<string, Token> tokens = new Dictionary<string, Token>();
 
             for(int i = 0; i <= text.Length - tokenSize; i += tokenSize)
             {
-               string tokenValue = text.Substring(i, tokenSize);
+                string tokenValue = text.Substring(i, tokenSize);
 
                 Token token;
                 if(tokens.ContainsKey(tokenValue))
@@ -34,44 +34,42 @@ namespace WG2.Tokenization
                 }
                 else
                 {
-                    token = new Token();
-                    token.Value = tokenValue;
-                    token.SubsequentTokens = new List<Token>[settings.SubsequentTokensCount];
-                    for(int j = 0; j < settings.SubsequentTokensCount; j++)
+                    token = new Token
                     {
-                        token.SubsequentTokens[j] = new List<Token>();
-                    }
+                        Value = tokenValue
+                    };
+
                     tokens[tokenValue] = token;
+                    graph.AddVertex(token);
                 }
-                result.Add(token);
+
                 if(i >= tokenSize)
                 {
-                    for(int j = 0; j < token.SubsequentTokens.Length; j++)
-                    {
-                        var startPrevTokenIndex = (i - tokenSize) - tokenSize * j;
-                        if(startPrevTokenIndex < 0) continue; //we just not far from start, there is no
-                        //previous tokens at this position and subsequent depth
-                        string prevTokenValue = text.Substring(startPrevTokenIndex, tokenSize);
-                        Token prevToken = tokens[prevTokenValue];
-                        prevToken.SubsequentTokens[j].Add(token);
+                    var prevTokenIndex = i - tokenSize;
 
-                        const int baseFrequency = 20;
-                        int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
-                        if(settings.LogDebugInfo)
+                    ReadOnlySpan<char>prevTokenValue = text.AsSpan(prevTokenIndex, tokenSize);
+                    Token prevToken = tokens[prevTokenValue.ToString()];
+
+                    graph.AddEdge(prevToken, token);
+
+                    const int baseFrequency = 20;
+                    int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
+                    if(settings.LogDebugInfo)
+                    {
+                        if(i % tokenLogFrequency == 0)
                         {
-                            if(i % tokenLogFrequency == 0)
-                            {
-                                Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
-                            }
+                            Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                         }
                     }
                 }
             }
+
             if(settings.LogDebugInfo)
             {
-                Logger.LogDebug($"Total tokens created: {result.Count}\n");
+                Logger.LogDebug($"Total tokens created: {tokens.Count}\n");
             }
-            return result.ToArray();
+
+            return graph;
         }
     }
 }

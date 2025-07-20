@@ -10,79 +10,48 @@ namespace WG2.Generation
     public class SGenerator : IGenerator
     {
         private Random Random = new Random();
-        private bool IsBadToken(Token token)
-        {
-            if(token == null)
-            {
-                return true;
-            }
-            for(int i = 0; i < token.SubsequentTokens.Length; i++)
-            {
-                if(token.SubsequentTokens[i] == null)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
-        private void PickRandom(ref Token token, Token[] sourceArray)
-        {
-            do
-            {
-                token = sourceArray[Random.Next(0, sourceArray.Length)];
-            } while(IsBadToken(token));
-        }
-
-        private Token GetNextToken(Token token,int subTokenIndex, int nextTokensCount, Token[] grabIfNull)
-        {
-            int nextTokenIndex = 0;
-            nextTokenIndex = Random.Next(0, nextTokensCount);
-            if(nextTokenIndex >= token.SubsequentTokens[subTokenIndex].Count)
-            {
-                nextTokenIndex = token.SubsequentTokens[subTokenIndex].Count - 1;
-            }
-            if(nextTokenIndex < 0)
-            {
-                PickRandom(ref token, grabIfNull);
-                return token;
-            }
-            return token.SubsequentTokens[subTokenIndex][nextTokenIndex];
-        }
-
-        public string Generate(GeneratorSettings settings, Token[] tokens)
+        public string Generate(GeneratorSettings settings, DirectedGraph<Token> tokens)
         {
             StringBuilder sb = new StringBuilder();
             Token thisToken = null;
             for(int i = 0; i < settings.TokensGenerateCount; i++)
             {
-                if(IsBadToken(thisToken) || Random.NextDouble() < settings.RandomNextTokenChance)
+                if(IsBadToken(thisToken, tokens) || Random.NextDouble() < settings.RandomNextTokenChance)
                 {
                     PickRandom(ref thisToken, tokens);
-                    sb.Append(thisToken.Value);
                 }
 
-                Token nextToken = thisToken;
-                for(int j = 0; j < settings.SubsequentTokensCount; j++)
+                if(settings.LogDebugInfo)
                 {
-                    nextToken = GetNextToken(thisToken, j, settings.NextTokensCount, tokens);
-                    if(settings.LogDebugInfo)
-                    {
-                        Logger.LogDebug($"this token: {thisToken.Value} next token: {nextToken.Value} token dimension: {j}");
-                        //separating tokens
-                        sb.Append('|');
-                    }
-
-                    sb.Append(nextToken.Value);
-                    if(j == settings.SubsequentTokensCount - 1)
-                    { 
-                        i += j; //we generated some tokens, so add generated tokens count to i
-                        thisToken = nextToken;
-                    }
+                    sb.Append('|');
                 }
 
+                sb.Append(thisToken.Value);
+
+                var adjacentVertices = tokens.GetAdjacentVertices(thisToken);
+                thisToken = adjacentVertices[Random.Next(0, adjacentVertices.Count)];
             }
             return sb.ToString();
+        }
+
+        private bool IsBadToken(Token token, DirectedGraph<Token> source)
+        {
+            if(token == null || source.GetAdjacentVertices(token).Count == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void PickRandom(ref Token token, DirectedGraph<Token> source)
+        {
+            //do while because we want to pick random token even if input token is valid
+            do
+            {
+                token = source.GetRandom(0, source.Count());
+            } while(IsBadToken(token, source));
         }
     }
 }

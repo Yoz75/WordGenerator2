@@ -30,9 +30,7 @@ namespace WG2
 
             GeneratorSettings generatorSettings = new GeneratorSettings();
             generatorSettings.TokensGenerateCount = 200;
-            generatorSettings.NextTokensCount = 10;
             generatorSettings.RandomNextTokenChance = 0;
-            generatorSettings.SubsequentTokensCount = 1;
 
             ITokenizer tokenizer = new SDTokenizer();
             IGenerator generator = new SGenerator();
@@ -107,16 +105,6 @@ namespace WG2
                 "\"tmax [number]\""));
             wg2Interface.AddCommand(new Command<int>
                 (
-                "tsc",
-                "set subsequent tokens count",
-                (value) =>
-                {
-                    tokenizerSettings.SubsequentTokensCount = value;
-                    generatorSettings.SubsequentTokensCount = value;
-                },
-                "\"tsc [number]\""));
-            wg2Interface.AddCommand(new Command<int>
-                (
                 "tg",
                 "set how many tokens generate",
                 (value) =>
@@ -124,15 +112,6 @@ namespace WG2
                     generatorSettings.TokensGenerateCount = value;
                 },
                 "\"tg [number]\""));
-            wg2Interface.AddCommand(new Command<int>
-                (
-                "tn",
-                "set next tokens count",
-                (value) =>
-                {
-                    generatorSettings.NextTokensCount = value;
-                },
-                "\"tn [number]\""));
             wg2Interface.AddCommand(new Command<double>
                 (
                 "tr",
