@@ -73,7 +73,7 @@ namespace WG2
                         result = generator.Generate(generatorSettings, tokens);
                     }
 
-                    if(generatorSettings.LogDebugInfo) Logger.LogMessage($"{result}\n{result.Trim('|')}");
+                    if(generatorSettings.LogDebugInfo) Logger.LogMessage($"{result}\n\n{result.Replace("|", "")}");
                     else Logger.LogMessage(result);
                 },
                 "\"run [path/text]\""));
