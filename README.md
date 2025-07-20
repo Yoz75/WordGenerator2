@@ -14,8 +14,6 @@ Write help command to view commands and their usage.
 * ts [number] -- set token size to [number], as smaller the [number], as smaller pieces of text will create tokenizer and vice versa
 * tmin [number] -- set minimal token size to [number], created to support tokenizers with random token size
 * tmax [number] -- set maximal token size to [number], created to support tokenizers with random token size
-* tsc [number] -- set subsequent tokens count to [number]. This number is means, how many tokens after itself a token will "remember". I. e this value specifies size of List<Token>[] SubsequentTokens array (SubsequentTokens = new List<Token>[count]. For example, when tsc=5, Token will remember tokens at 5 next positions.
-* tn [number] -- count of next tokens, that token will remebmer. For example if tsc=5 and tn=10, token will remember 10 tokens at 5 next positions
 * tg [number] -- generate [number] tokens. Do not confuse characters and tokens. If ts=2 and tg=200, wg2 will generate 400 symbols
 * tr [number in range 0..1] -- chance random next token (default 0)
 * separate [size/space] -- "space": separate tokens with spaces, potentially works better with analytic languages (like english)<br> "size": default separating tokens to several characters
