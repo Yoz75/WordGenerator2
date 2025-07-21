@@ -3,7 +3,6 @@ namespace WG2.Tokenization
 {
     public struct TokenizerSettings
     {
-        public int SubsequentTokensCount;
         /// <summary>
         /// Minimal token size. Usual maximal and minimal sizes are the same
         /// </summary>

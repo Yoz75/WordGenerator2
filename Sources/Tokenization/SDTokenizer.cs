@@ -53,10 +53,9 @@ namespace WG2.Tokenization
                 graph.AddEdge(prevToken, token);
 
                 const int baseFrequency = 20;
-                int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
                 if(settings.LogDebugInfo)
                 {
-                    if(i % tokenLogFrequency == 0)
+                    if(i % baseFrequency == 0)
                     {
                         Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                     }
