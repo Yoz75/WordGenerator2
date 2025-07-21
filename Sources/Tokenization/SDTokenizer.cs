@@ -47,8 +47,8 @@ namespace WG2.Tokenization
 
                 var prevTokenIndex = i - tokenSize;
 
-                ReadOnlySpan<char> prevTokenValue = text.AsSpan(prevTokenIndex, tokenSize);
-                Token prevToken = tokens[prevTokenValue.ToString()];
+                string prevTokenValue = text.Substring(prevTokenIndex, tokenSize);
+                Token prevToken = tokens[prevTokenValue];
 
                 graph.AddEdge(prevToken, token);
 

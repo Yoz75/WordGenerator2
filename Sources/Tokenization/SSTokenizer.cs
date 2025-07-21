@@ -39,8 +39,8 @@ namespace WG2.Tokenization
 
                 var startPrevTokenIndex = i - 1;
 
-                ReadOnlySpan<char> prevTokenValue = rawTokens[startPrevTokenIndex];
-                Token prevToken = tokens[prevTokenValue.ToString()];
+                string prevTokenValue = rawTokens[startPrevTokenIndex];
+                Token prevToken = tokens[prevTokenValue];
 
                 result.AddEdge(prevToken, token);
 
