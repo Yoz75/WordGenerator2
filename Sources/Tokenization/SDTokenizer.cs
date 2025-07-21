@@ -20,7 +20,7 @@ namespace WG2.Tokenization
             }
 
             int tokenSize = settings.MinimalTokenSize; // actually you can use settings.MaximalToken size, they are equals
-            DirectedGraph<Token> graph = new DirectedGraph<Token>();
+            DirectedGraph<Token> graph = new(settings.ResultCapacity);
             Dictionary<string, Token> tokens = new Dictionary<string, Token>();
 
             for(int i = 0; i <= text.Length - tokenSize; i += tokenSize)

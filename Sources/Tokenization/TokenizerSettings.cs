@@ -13,7 +13,7 @@ namespace WG2.Tokenization
         public int MaximalTokenSize;
 
         /// <summary>
-        /// Capacity of the result array.
+        /// Capacity of the result tokens graph.
         /// </summary>
         public int ResultCapacity = 100;
 

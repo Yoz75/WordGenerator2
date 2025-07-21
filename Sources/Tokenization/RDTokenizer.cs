@@ -12,7 +12,7 @@ namespace WG2.Tokenization
     {
         public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
         {
-            DirectedGraph<Token> result = new();
+            DirectedGraph<Token> result = new(settings.ResultCapacity);
 
             Dictionary<string, Token> tokens = new Dictionary<string, Token>();
 

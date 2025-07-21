@@ -55,8 +55,8 @@ namespace WG2
                     {
                         Logger.LogDebug($"Tokenizer: {tokenizer}, Generator: {generator}\n");
                     }
-                    var tokens = tokenizer.Tokenize(tokenizerSettings, tokenizerInput); 
-                    
+                    var tokens = tokenizer.Tokenize(tokenizerSettings, tokenizerInput);
+
                     string result = "";
 
                     if(funRecreationsCount > 0)
@@ -129,6 +129,15 @@ namespace WG2
                 (value) =>
                 {
                     funRecreationsCount = value;
+                },
+                "\"fr [number]\""));
+            wg2Interface.AddCommand(new Command<int>
+                (
+                "cap",
+                "set capacity of result graph (bigger values can improve perfomance, when process big files",
+                (value) =>
+                {
+                    tokenizerSettings.ResultCapacity = value;
                 },
                 "\"fr [number]\""));
             wg2Interface.AddCommand(new Command

@@ -16,6 +16,11 @@ namespace WG2
             AdjacencyList = new Dictionary<T, List<T>>();
         }
 
+        public DirectedGraph(int capacity)
+        {
+            AdjacencyList = new Dictionary<T, List<T>>(capacity);
+        }
+
         public void AddVertex(T vertex)
         {
             if(!AdjacencyList.ContainsKey(vertex))
