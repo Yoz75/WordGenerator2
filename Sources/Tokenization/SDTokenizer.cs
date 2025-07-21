@@ -13,7 +13,7 @@ namespace WG2.Tokenization
         {
             if(settings.MinimalTokenSize != settings.MaximalTokenSize)
             {
-                
+
                 throw new ArgumentException("MinimalTokenSize and MaximalToken size must have " +
                     $"same values, but MinimalTokenSize is {settings.MinimalTokenSize} and " +
                     $"MaximalTokenSize is {settings.MaximalTokenSize}!!!!!!!");
@@ -43,23 +43,22 @@ namespace WG2.Tokenization
                     graph.AddVertex(token);
                 }
 
-                if(i >= tokenSize)
+                if(i < tokenSize) continue;
+
+                var prevTokenIndex = i - tokenSize;
+
+                ReadOnlySpan<char> prevTokenValue = text.AsSpan(prevTokenIndex, tokenSize);
+                Token prevToken = tokens[prevTokenValue.ToString()];
+
+                graph.AddEdge(prevToken, token);
+
+                const int baseFrequency = 20;
+                int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
+                if(settings.LogDebugInfo)
                 {
-                    var prevTokenIndex = i - tokenSize;
-
-                    ReadOnlySpan<char>prevTokenValue = text.AsSpan(prevTokenIndex, tokenSize);
-                    Token prevToken = tokens[prevTokenValue.ToString()];
-
-                    graph.AddEdge(prevToken, token);
-
-                    const int baseFrequency = 20;
-                    int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
-                    if(settings.LogDebugInfo)
+                    if(i % tokenLogFrequency == 0)
                     {
-                        if(i % tokenLogFrequency == 0)
-                        {
-                            Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
-                        }
+                        Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                     }
                 }
             }

@@ -44,26 +44,26 @@ namespace WG2.Tokenization
 
 
                 //that means we generated at least 1 token
-                if(i >= settings.MinimalTokenSize)
+                if(i < settings.MinimalTokenSize) goto FrameEnd; // GOTO \>_</
+
+                var startPrevTokenIndex = i - prevTokenSize;
+
+                ReadOnlySpan<char> prevTokenValue = text.AsSpan(startPrevTokenIndex, prevTokenSize);
+                Token prevToken = tokens[prevTokenValue.ToString()];
+
+                result.AddEdge(prevToken, token);
+
+                const int baseFrequency = 20;
+                int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
+                if(settings.LogDebugInfo)
                 {
-                    var startPrevTokenIndex = i - prevTokenSize;
-
-                    ReadOnlySpan<char> prevTokenValue = text.AsSpan(startPrevTokenIndex, prevTokenSize);
-                    Token prevToken = tokens[prevTokenValue.ToString()];
-
-                    result.AddEdge(prevToken, token);
-
-                    const int baseFrequency = 20;
-                    int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
-                    if(settings.LogDebugInfo)
+                    if(i % tokenLogFrequency == 0)
                     {
-                        if(i % tokenLogFrequency == 0)
-                        {
-                            Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
-                        }
+                        Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                     }
                 }
 
+            FrameEnd:
                 i += tokenSize;
                 prevTokenSize = tokenSize;
             }

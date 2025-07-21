@@ -35,23 +35,22 @@ namespace WG2.Tokenization
                 }
 
 
-                if(i >= 1)
+                if(i < 1) continue;
+
+                var startPrevTokenIndex = i - 1;
+
+                ReadOnlySpan<char> prevTokenValue = rawTokens[startPrevTokenIndex];
+                Token prevToken = tokens[prevTokenValue.ToString()];
+
+                result.AddEdge(prevToken, token);
+
+                const int baseFrequency = 20;
+                int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
+                if(settings.LogDebugInfo)
                 {
-                    var startPrevTokenIndex = i - 1;
-
-                    ReadOnlySpan<char> prevTokenValue = rawTokens[startPrevTokenIndex];
-                    Token prevToken = tokens[prevTokenValue.ToString()];
-
-                    result.AddEdge(prevToken, token);
-
-                    const int baseFrequency = 20;
-                    int tokenLogFrequency = baseFrequency * settings.SubsequentTokensCount;
-                    if(settings.LogDebugInfo)
+                    if(i % tokenLogFrequency == 0)
                     {
-                        if(i % tokenLogFrequency == 0)
-                        {
-                            Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
-                        }
+                        Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                     }
                 }
             }
