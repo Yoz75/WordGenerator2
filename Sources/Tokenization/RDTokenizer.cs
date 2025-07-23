@@ -12,18 +12,17 @@ namespace WG2.Tokenization
     {
         public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
         {
-            DirectedGraph<Token> result = new(settings.ResultCapacity);
-
-            Dictionary<string, Token> tokens = new Dictionary<string, Token>();
-
-            //we need this to know sizes of previous tokens (cuz it random every time)
-            int prevTokenSize = 0;
-
-
-            Random random = new Random();
-
             for(int j = 0; j < settings.RandomIterations; j++)
             {
+                DirectedGraph<Token> result = new(settings.ResultCapacity);
+
+                Dictionary<string, Token> tokens = new Dictionary<string, Token>();
+
+                Random random = new Random();
+
+                //we need this to know sizes of previous tokens (cuz it random every time)
+                int prevTokenSize = 0;
+
                 int i = 0;
                 int tokenSize = 0;
 
@@ -71,7 +70,7 @@ namespace WG2.Tokenization
                 }
 
                 if(settings.LogDebugInfo)
-                { 
+                {
                     Logger.LogDebug($"Total tokens created per iteration: {tokens.Count}");
                 }
             }
