@@ -130,7 +130,7 @@ namespace WG2
             {
                 tokenizerSettings.RandomIterations = value;
             },
-            "\"tg [number]\""));
+            "\"tri [number]\""));
             wg2Interface.AddCommand(new Command<int>
                 (
                 "fr",
