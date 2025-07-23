@@ -36,8 +36,7 @@ namespace WG2.Tokenization
                 }
                 else
                 {
-                    token = new Token();
-                    token.Value = tokenValue;
+                    token = new Token(tokenValue);
                     tokens[tokenValue] = token;
                     result.AddVertex(token);
                 }

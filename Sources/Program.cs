@@ -180,7 +180,8 @@ namespace WG2
                 (
                 "separate",
                 "separate tokens by another type (size - fixed token size; space - every token is a word; " +
-                "rand - random token size (between tmin and tmax)",
+                "rand - random token size (between tmin and tmax)" +
+                "bpe - byte pair encoding (tmin is iterations count, tmax is maximal token size)",
                 (separateType) =>
                 {
                     switch(separateType)
@@ -191,13 +192,16 @@ namespace WG2
                         case "rand":
                             tokenizer = new RDTokenizer();
                             break;
+                        case "bpe":
+                            tokenizer = new BPETokenizer();
+                            break;
                         case "size": //size separating is default
                         default:
                             tokenizer = new SDTokenizer();
                             break;
                     }
                 },
-                "\"separate [size/space/rand]\""));
+                "\"separate [size/space/rand/bpe]\""));
             #endregion
             wg2Interface.Start();
         }

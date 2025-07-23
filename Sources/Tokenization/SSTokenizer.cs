@@ -28,8 +28,8 @@ namespace WG2.Tokenization
                 }
                 else
                 {
-                    token = new Token();
-                    token.Value = tokenValue + ' '; //we separated text by ' ' so every space was deleted
+                    //we separated text by ' ' so every space was deleted
+                    token = new Token(tokenValue + ' ');
                     tokens[tokenValue] = token;
                     result.AddVertex(token);
                 }

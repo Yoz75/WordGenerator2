@@ -34,10 +34,7 @@ namespace WG2.Tokenization
                 }
                 else
                 {
-                    token = new Token
-                    {
-                        Value = tokenValue
-                    };
+                    token = new Token(tokenValue);
 
                     tokens[tokenValue] = token;
                     graph.AddVertex(token);

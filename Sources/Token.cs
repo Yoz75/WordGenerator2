@@ -7,6 +7,11 @@ namespace WG2
     {
         public string Value;
 
+        public Token(string value)
+        {
+            Value = value;
+        }
+
         public static bool operator ==(Token left, Token right)
         {
             if(left is null && right is null)
