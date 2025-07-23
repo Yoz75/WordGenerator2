@@ -123,6 +123,15 @@ namespace WG2
                 },
                 "\"tr [number in range 0..1]\""));
             wg2Interface.AddCommand(new Command<int>
+            (
+            "tri",
+            "set how many random separator do iterations (bigger values = more token variants, but slower performance)",
+            (value) =>
+            {
+                tokenizerSettings.RandomIterations = value;
+            },
+            "\"tg [number]\""));
+            wg2Interface.AddCommand(new Command<int>
                 (
                 "fr",
                 "set funny recreations count",

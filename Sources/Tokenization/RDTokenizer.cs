@@ -24,51 +24,55 @@ namespace WG2.Tokenization
             int i = 0;
             int tokenSize = 0;
 
-            while(i < text.Length - settings.MaximalTokenSize)
+            for(int j = 0; j < settings.RandomIterations; j++)
             {
-                tokenSize = random.Next(settings.MinimalTokenSize, settings.MaximalTokenSize);
-                string tokenValue = text.Substring(i, tokenSize);
 
-                Token token;
-                if(tokens.ContainsKey(tokenValue))
+                while(i < text.Length - settings.MaximalTokenSize)
                 {
-                    token = tokens[tokenValue];
+                    tokenSize = random.Next(settings.MinimalTokenSize, settings.MaximalTokenSize);
+                    string tokenValue = text.Substring(i, tokenSize);
+
+                    Token token;
+                    if(tokens.ContainsKey(tokenValue))
+                    {
+                        token = tokens[tokenValue];
+                    }
+                    else
+                    {
+                        token = new Token();
+                        token.Value = tokenValue;
+                        tokens[tokenValue] = token;
+                        result.AddVertex(token);
+                    }
+
+
+                    //that means we generated at least 1 token
+                    if(i < settings.MinimalTokenSize) goto FrameEnd; // GOTO \>_</
+
+                    var startPrevTokenIndex = i - prevTokenSize;
+
+                    string prevTokenValue = text.Substring(startPrevTokenIndex, prevTokenSize);
+                    Token prevToken = tokens[prevTokenValue];
+
+                    result.AddEdge(prevToken, token);
+
+                    const int baseFrequency = 20;
+                    if(settings.LogDebugInfo)
+                    {
+                        if(i % baseFrequency == 0)
+                        {
+                            Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
+                        }
+                    }
+
+                FrameEnd:
+                    i += tokenSize;
+                    prevTokenSize = tokenSize;
                 }
-                else
-                {
-                    token = new Token();
-                    token.Value = tokenValue;
-                    tokens[tokenValue] = token;
-                    result.AddVertex(token);
-                }
-
-
-                //that means we generated at least 1 token
-                if(i < settings.MinimalTokenSize) goto FrameEnd; // GOTO \>_</
-
-                var startPrevTokenIndex = i - prevTokenSize;
-
-                string prevTokenValue = text.Substring(startPrevTokenIndex, prevTokenSize);
-                Token prevToken = tokens[prevTokenValue];
-
-                result.AddEdge(prevToken, token);
-
-                const int baseFrequency = 20;
                 if(settings.LogDebugInfo)
                 {
-                    if(i % baseFrequency == 0)
-                    {
-                        Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
-                    }
+                    Logger.LogDebug($"Total tokens created: {result.Count}\n");
                 }
-
-            FrameEnd:
-                i += tokenSize;
-                prevTokenSize = tokenSize;
-            }
-            if(settings.LogDebugInfo)
-            {
-                Logger.LogDebug($"Total tokens created: {result.Count}\n");
             }
 
             return result;

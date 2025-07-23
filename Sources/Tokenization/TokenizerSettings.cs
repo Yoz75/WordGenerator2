@@ -13,6 +13,11 @@ namespace WG2.Tokenization
         public int MaximalTokenSize;
 
         /// <summary>
+        /// Count of RDTokenizer's iterations (every time adds new random-sized tokens).
+        /// </summary>
+        public int RandomIterations = 1;
+
+        /// <summary>
         /// Capacity of the result tokens graph.
         /// </summary>
         public int ResultCapacity = 100;
