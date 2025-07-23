@@ -21,11 +21,11 @@ namespace WG2.Tokenization
 
 
             Random random = new Random();
-            int i = 0;
-            int tokenSize = 0;
 
             for(int j = 0; j < settings.RandomIterations; j++)
             {
+                int i = 0;
+                int tokenSize = 0;
 
                 while(i < text.Length - settings.MaximalTokenSize)
                 {
@@ -56,7 +56,7 @@ namespace WG2.Tokenization
 
                     result.AddEdge(prevToken, token);
 
-                    const int baseFrequency = 20;
+                    const int baseFrequency = 1;
                     if(settings.LogDebugInfo)
                     {
                         if(i % baseFrequency == 0)
@@ -69,10 +69,16 @@ namespace WG2.Tokenization
                     i += tokenSize;
                     prevTokenSize = tokenSize;
                 }
+
                 if(settings.LogDebugInfo)
-                {
-                    Logger.LogDebug($"Total tokens created: {tokens.Count}\n");
+                { 
+                    Logger.LogDebug($"Total tokens created per iteration: {tokens.Count}");
                 }
+            }
+
+            if(settings.LogDebugInfo)
+            {
+                Logger.LogDebug($"Total tokens created: {tokens.Count}\n");
             }
 
             return result;
