@@ -71,7 +71,7 @@ namespace WG2.Tokenization
                 }
                 if(settings.LogDebugInfo)
                 {
-                    Logger.LogDebug($"Total tokens created: {result.Count}\n");
+                    Logger.LogDebug($"Total tokens created: {tokens.Count}\n");
                 }
             }
 
