@@ -12,9 +12,10 @@ namespace WG2.Tokenization
     {
         public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
         {
+            DirectedGraph<Token> result = new(settings.ResultCapacity);
+
             for(int j = 0; j < settings.RandomIterations; j++)
             {
-                DirectedGraph<Token> result = new(settings.ResultCapacity);
 
                 Dictionary<string, Token> tokens = new Dictionary<string, Token>();
 
@@ -73,11 +74,6 @@ namespace WG2.Tokenization
                 {
                     Logger.LogDebug($"Total tokens created per iteration: {tokens.Count}");
                 }
-            }
-
-            if(settings.LogDebugInfo)
-            {
-                Logger.LogDebug($"Total tokens created: {tokens.Count}\n");
             }
 
             return result;
