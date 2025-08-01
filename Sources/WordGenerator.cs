@@ -82,7 +82,8 @@ public static class WordGenerator
 
         if(GeneratorSettings.LogDebugInfo)
         {
-            Logger.LogMessage($"{result}\n\n{result.Replace("|", "")}");
+            Logger.LogDebug(result);
+            Logger.LogMessage(result.Replace("|", ""));
         }
         else Logger.LogMessage(result);
     }
