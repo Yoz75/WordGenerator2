@@ -56,7 +56,7 @@ namespace WG2.Tokenization
 
                     result.AddEdge(prevToken, token);
 
-                    const int baseFrequency = 1;
+                    const int baseFrequency = 20;
                     if(settings.LogDebugInfo)
                     {
                         if(i % baseFrequency == 0)
