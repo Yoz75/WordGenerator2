@@ -80,7 +80,10 @@ public static class WordGenerator
             result = Generator.Generate(GeneratorSettings, tokens);
         }
 
-        if(GeneratorSettings.LogDebugInfo) Logger.LogMessage($"{result}\n\n{result.Replace("|", "")}");
+        if(GeneratorSettings.LogDebugInfo)
+        {
+            Logger.LogMessage($"{result}\n\n{result.Replace("|", "")}");
+        }
         else Logger.LogMessage(result);
     }
 
@@ -144,8 +147,18 @@ public static class WordGenerator
     public static void LogWG2DebugInfo(bool value)
     {
         WG2Settings.LogDebugInfo = value;
-        GeneratorSettings.LogDebugInfo = value;
+    }
+
+    [Command(AppInterfaceName, "tdebinf", "log tokenizer debug info?", "tdebinf [true/false]")]
+    public static void LogTokenizerDebugInfo(bool value)
+    {
         TokenizerSettings.LogDebugInfo = value;
+    }
+
+    [Command(AppInterfaceName, "gdebinf", "log generator debug info?", "gdebinf [true/false]")]
+    public static void LogGeneratorDebugInfo(bool value)
+    {
+        GeneratorSettings.LogDebugInfo = value;
     }
 
     [Command(AppInterfaceName, "separate", "set new text separator strategy (tokenizer).\n" +
