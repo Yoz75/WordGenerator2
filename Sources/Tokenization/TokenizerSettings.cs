@@ -6,11 +6,11 @@ namespace WG2.Tokenization
         /// <summary>
         /// Minimal token size. Usual maximal and minimal sizes are the same
         /// </summary>
-        public int MinimalTokenSize;
+        public int MinimalTokenSize = 3;
         /// <summary>
         /// Maximal token size. Usual maximal and minimal sizes are the same
         /// </summary>
-        public int MaximalTokenSize;
+        public int MaximalTokenSize = 3;
 
         /// <summary>
         /// Count of RDTokenizer's iterations (every time adds new random-sized tokens).

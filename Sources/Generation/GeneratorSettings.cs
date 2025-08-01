@@ -6,7 +6,7 @@ namespace WG2.Generation
         /// <summary>
         /// how much tokens generate
         /// </summary>
-        public int TokensGenerateCount;
+        public int TokensGenerateCount = 200;
         /// <summary>
         /// 0..100 chance that next token will be chosen randomly from tokens array
         /// </summary>
