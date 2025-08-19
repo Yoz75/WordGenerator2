@@ -22,6 +22,21 @@ namespace WG2.Tokenization
         /// </summary>
         public int ResultCapacity = 100;
 
+        /// <summary>
+        /// Count of iterations for iterative tokenizer
+        /// </summary>
+        public int ItTokenizerSamples = 3;
+
+        /// <summary>
+        /// Value of top K for iterative tokenizer (ItTokenizer selects random pair of K popularest).
+        /// </summary>
+        public int ItTokenizerTopK = 1;
+
+        /// <summary>
+        /// Minimal count of pair in text to be merged by ItTokenizer.
+        /// </summary>
+        public int ItTokenizerMinMergeCount = 2;
+
         public bool LogDebugInfo;
 
         public TokenizerSettings()

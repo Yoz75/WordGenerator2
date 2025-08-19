@@ -162,10 +162,32 @@ public static class WordGenerator
         GeneratorSettings.LogDebugInfo = value;
     }
 
+    [Command(AppInterfaceName, "tis", "set iterative's tokeniser samples count (more = more realistic)",
+        "its [value]")]
+    public static void SetIterativeSamples(int value)
+    {
+        TokenizerSettings.ItTokenizerSamples = value;
+    }
+
+    [Command(AppInterfaceName, "tik", "set iterative's tokenizer top K " +
+        "(probably greater values can break text)", "itk [value]")]
+    public static void SetIterativeTopK(int value)
+    {
+        TokenizerSettings.ItTokenizerTopK = value;
+    }
+
+    [Command(AppInterfaceName, "tic", "set iterative's tokenizer minimal count " +
+        "(greater values can improve text when tokens look out of place)", "itk [value]")]
+    public static void SetIterativeMegreCount(int value)
+    {
+        TokenizerSettings.ItTokenizerMinMergeCount = value;
+    }
+
     [Command(AppInterfaceName, "separate", "set new text separator strategy (tokenizer).\n" +
         "Available tokenizers:\n" +
         "space -- each word is a token\n" +
         "rand -- random token size between tmin and tmax\n" +
+        "it -- iterative tokenizer (doesn't use tmin and ts, only tmax, see tis and tik commands)" +
         "size (default) -- fixed size tokens of tg size.", "separate [space/rand/size]")]
     public static void SetTokenizer(string name)
     {
@@ -176,6 +198,9 @@ public static class WordGenerator
                 break;
             case "rand":
                 Tokenizer = new RDTokenizer();
+                break;
+            case "it":
+                Tokenizer = new ItTokenizer();
                 break;
             case "size": //size separating is default
             default:
