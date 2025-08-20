@@ -182,8 +182,11 @@ public class ItTokenizer : ITokenizer
 
         ToTokens(result, rawTokens);
 
-        Logger.LogDebug("Tokenization completed. " +
-            $"Total tokens created: {result.Count()}");
+        if(settings.LogDebugInfo)
+        {
+            Logger.LogDebug("Tokenization completed. " +
+                $"Total tokens created: {result.Count()}");
+        }
 
         return result;
     }
