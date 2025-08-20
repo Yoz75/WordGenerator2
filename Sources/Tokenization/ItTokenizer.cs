@@ -142,8 +142,8 @@ public class ItTokenizer : ITokenizer
                 if(j >= maxTokenFindingIterations || index + j >= pairsList.Count)
                 {
                     Logger.LogError($"Failed to find suitable token less than {settings.MaximalTokenSize + 1} " +
-                        $"and greater than {settings.ItTokenizerMinMergeCount} " +
-                        $"chars after {maxTokenFindingIterations} iterations. " +
+                        $"and more frequent than {settings.ItTokenizerMinMergeCount} " +
+                        $"times after {maxTokenFindingIterations} iterations. " +
                         $"(that's normal for small input or big tis values)");
                     break;
                 }
