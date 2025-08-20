@@ -156,31 +156,12 @@ public class ItTokenizer : ITokenizer
             } while(selectedPair.Key.FullString.Length > settings.MaximalTokenSize 
             || selectedPair.Value < settings.ItTokenizerMinMergeCount);
 
-            current = rawTokens.First;
-
             if(settings.LogDebugInfo)
             {
                 Logger.LogDebug($"Selected built pair: {selectedPair.Key.FullString}\n");
             }
 
-            while(current != null)
-            {
-                LinkedListNode<string>? next = current?.Next;
-
-                if(next != null)
-                {
-                    int newLength = current!.Value.Length + next.Value.Length;
-                    string newString = current!.Value + next!.Value;
-                    if(selectedPair.Key.FullString == current.Value + next.Value && newLength <= settings.MaximalTokenSize)
-                    {
-                        current.Value = selectedPair.Key.FullString;
-                        //current = next.Next;
-                        rawTokens.Remove(next);
-                    }
-                }
-
-                current = current?.Next;
-            }
+            UpdateRawTokens(settings.MaximalTokenSize, rawTokens, selectedPair);
         }
 
         ToTokens(result, rawTokens);
@@ -192,6 +173,30 @@ public class ItTokenizer : ITokenizer
         }
 
         return result;
+    }
+
+    private static void UpdateRawTokens(int maxTokenSize, LinkedList<string> rawTokens, KeyValuePair<Pair, int> selectedPair)
+    {
+        var current = rawTokens.First;
+
+        while(current != null)
+        {
+            LinkedListNode<string>? next = current?.Next;
+
+            if(next != null)
+            {
+                int newLength = current!.Value.Length + next.Value.Length;
+                string newString = current!.Value + next!.Value;
+                if(selectedPair.Key.FullString == current.Value + next.Value && newLength <= maxTokenSize)
+                {
+                    current.Value = selectedPair.Key.FullString;
+                    //current = next.Next;
+                    rawTokens.Remove(next);
+                }
+            }
+
+            current = current?.Next;
+        }
     }
 
     private static void ToTokens(DirectedGraph<Token> result, LinkedList<string> rawTokens)
