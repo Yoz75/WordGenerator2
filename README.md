@@ -16,7 +16,7 @@ Write help command to view commands and their usage.
 * tmax [number] -- set maximal token size to [number], created to support tokenizers with random token size
 * tg [number] -- generate [number] tokens. Do not confuse characters and tokens. If ts=2 and tg=200, wg2 will generate 400 symbols
 * tr [number in range 0..1] -- chance random next token (default 0)
-* separate [size/space] -- "space": separate tokens with spaces, potentially works better with analytic languages (like english)<br> "size": default separating tokens to several characters
+* separate [size/space/rand/it] -- "space": separate tokens with spaces, potentially works better with analytic languages (like english)<br>"size": default separating tokens to several characters<br> "rand": random size between tmin and tmax<br>"it": iterative tokenizer, use tis to set iterations count (longer text = set higher tis) and tik to set some "randomness" in token generation
 * fr [number] -- process input to tokens, generate response and tokenize it again ([number] times)
 * hp -- set high process priority (requires admin rights!)
 * np -- set normal process priority
