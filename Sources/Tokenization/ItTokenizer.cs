@@ -116,7 +116,7 @@ public class ItTokenizer : ITokenizer
             pairsList.Sort(
                 (a, b) =>
                 {
-                    int lengthComparison = b.Key.ToString().Length.CompareTo(a.Key.ToString().Length);
+                    int lengthComparison = b.Key.FullString.Length.CompareTo(a.Key.FullString.Length);
                     int countComparison = b.Value.CompareTo(a.Value);
 
                     // Count is more important than length, so we multiply it by 2
@@ -153,7 +153,7 @@ public class ItTokenizer : ITokenizer
                 selectedPair = pairsList[index + j];
 
                 j++;
-            } while(selectedPair.Key.FullString.Length > settings.MaximalTokenSize 
+            } while(selectedPair.Key.FullString.Length > settings.MaximalTokenSize
             || selectedPair.Value < settings.ItTokenizerMinMergeCount);
 
             if(settings.LogDebugInfo)
