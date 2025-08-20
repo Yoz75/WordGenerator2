@@ -50,7 +50,7 @@ public class ItTokenizer : ITokenizer
         }
     }
 
-    private Random Random = new Random();
+    private readonly Random Random = new Random();
 
     public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string input)
     {
