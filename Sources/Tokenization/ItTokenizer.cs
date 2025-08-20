@@ -19,6 +19,7 @@ public class ItTokenizer : ITokenizer
 
         public readonly ReadOnlyMemory<char> Left, Right;
         public readonly string FullString;
+        private readonly int HashCode;
 
         public Pair(string left, string right)
         {
@@ -26,6 +27,8 @@ public class ItTokenizer : ITokenizer
 
             Left = FullString.AsMemory(0, left.Length);
             Right = FullString.AsMemory(left.Length, right.Length);
+
+            HashCode = FullString.GetHashCode();
         }
 
         public static bool operator ==(Pair left, Pair right)
@@ -43,7 +46,7 @@ public class ItTokenizer : ITokenizer
 
         public override int GetHashCode()
         {
-            return FullString.GetHashCode();
+            return HashCode;
         }
     }
 
