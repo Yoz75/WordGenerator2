@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace WG2.Tokenization;
@@ -190,7 +189,6 @@ public class ItTokenizer : ITokenizer
                 if(selectedPair.Key.FullString == current.Value + next.Value && newLength <= maxTokenSize)
                 {
                     current.Value = selectedPair.Key.FullString;
-                    //current = next.Next;
                     rawTokens.Remove(next);
                 }
             }
