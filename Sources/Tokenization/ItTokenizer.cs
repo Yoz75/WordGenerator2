@@ -111,56 +111,11 @@ public class ItTokenizer : ITokenizer
             if(settings.LogDebugInfo)
                 Logger.LogDebug($"Pairs count: {pairs.Count}\n");
 
-            List<KeyValuePair<Pair, int>> pairsList = pairs.ToList();
-            pairsList.Sort(
-                (a, b) =>
-                {
-                    int lengthComparison = b.Key.FullString.Length.CompareTo(a.Key.FullString.Length);
-                    int countComparison = b.Value.CompareTo(a.Value);
+            Pair selectedPair = SelectPair(settings, pairs);
 
-                    // Count is more important than length, so we multiply it by 2
-                    return lengthComparison + countComparison * 2;
-                });
-
-            if(settings.LogDebugInfo)
-            {
-                foreach(var pair in pairsList)
-                {
-                    Logger.LogDebug($"sorted pair: {pair.Key.Left}|{pair.Key.Right} count: {pair.Value}");
-                }
-            }
-
-            settings.ItTokenizerTopK = settings.ItTokenizerTopK > pairsList.Count ?
-                pairsList.Count : settings.ItTokenizerTopK;
-
-            int index = Random.Next(0, settings.ItTokenizerTopK);
-
-            int j = 0;
-            KeyValuePair<Pair, int> selectedPair = default;
-            const int maxTokenFindingIterations = 1000;
-
-            do
-            {
-                if(j >= maxTokenFindingIterations || index + j >= pairsList.Count)
-                {
-                    Logger.LogError($"Failed to find suitable token less than {settings.MaximalTokenSize + 1} " +
-                        $"and more frequent than {settings.ItTokenizerMinMergeCount} " +
-                        $"times after {maxTokenFindingIterations} iterations. " +
-                        $"(that's normal for small input or big tis values)");
-                    break;
-                }
-                selectedPair = pairsList[index + j];
-
-                j++;
-            } while(selectedPair.Key.FullString.Length > settings.MaximalTokenSize
-            || selectedPair.Value < settings.ItTokenizerMinMergeCount);
-
-            if(settings.LogDebugInfo)
-            {
-                Logger.LogDebug($"Selected built pair: {selectedPair.Key.FullString}\n");
-            }
-
-            UpdateRawTokens(settings.MaximalTokenSize, rawTokens, selectedPair);
+            if(selectedPair == default) break;
+            
+            UpdateRawTokens(settings.MaximalTokenSize, rawTokens, selectedPair);            
         }
 
         ToTokens(result, rawTokens);
@@ -174,7 +129,62 @@ public class ItTokenizer : ITokenizer
         return result;
     }
 
-    private static void UpdateRawTokens(int maxTokenSize, LinkedList<string> rawTokens, KeyValuePair<Pair, int> selectedPair)
+
+    private Pair SelectPair(TokenizerSettings settings, Dictionary<Pair, int> pairs)
+    {
+        List<KeyValuePair<Pair, int>> pairsList = pairs.ToList();
+
+        pairsList = pairsList.Where((pair) =>
+        {
+            return
+                pair.Key.FullString.Length <= settings.MaximalTokenSize &&
+                pair.Value >= settings.ItTokenizerMinMergeCount;
+
+        }).ToList();
+
+        if(pairsList.Count <= 0)
+        {
+            Logger.LogError($"Failed to find suitable token less than {settings.MaximalTokenSize + 1} " +
+            $"and more frequent than {settings.ItTokenizerMinMergeCount}. Tokenization completed ahead of schedule " +
+            $"(that's normal for small input or big tis values)");
+
+            return default;
+        }
+
+        pairsList.Sort((a, b) =>
+        {
+            int lengthComparison = b.Key.FullString.Length.CompareTo(a.Key.FullString.Length);
+            int countComparison = b.Value.CompareTo(a.Value);
+
+            // Count is more important than length, so we multiply it by 2
+            return lengthComparison + countComparison * 2;
+        });
+
+        if(settings.LogDebugInfo)
+        {
+            foreach(var pair in pairsList)
+            {
+                Logger.LogDebug($"sorted pair: {pair.Key.Left}|{pair.Key.Right} count: {pair.Value}");
+            }
+        }
+
+        settings.ItTokenizerTopK = settings.ItTokenizerTopK > pairsList.Count ?
+            pairsList.Count : settings.ItTokenizerTopK;
+
+        KeyValuePair<Pair, int> selectedPair = default;
+        int index = Random.Next(0, settings.ItTokenizerTopK);
+
+        selectedPair = pairsList[index];
+
+        if(settings.LogDebugInfo)
+        {
+            Logger.LogDebug($"Selected built pair: {selectedPair.Key.FullString}\n");
+        }
+
+        return selectedPair.Key;
+    }
+
+    private static void UpdateRawTokens(int maxTokenSize, LinkedList<string> rawTokens, Pair selectedPair)
     {
         var current = rawTokens.First;
 
@@ -184,11 +194,11 @@ public class ItTokenizer : ITokenizer
 
             if(next != null)
             {
-                int newLength = current!.Value.Length + next.Value.Length;
                 string newString = current!.Value + next!.Value;
-                if(selectedPair.Key.FullString == current.Value + next.Value && newLength <= maxTokenSize)
+                if(selectedPair.FullString == current.Value + next.Value)
                 {
-                    current.Value = selectedPair.Key.FullString;
+                    current.Value = selectedPair.FullString;
+
                     rawTokens.Remove(next);
                 }
             }
@@ -221,7 +231,7 @@ public class ItTokenizer : ITokenizer
             // If next node is not null, add edge
             LinkedListNode<string>? previous = current.Previous;
             if(previous != null)
-            {           
+            {
                 result.AddEdge(resultTokens[previous.Value], token);
             }
 
