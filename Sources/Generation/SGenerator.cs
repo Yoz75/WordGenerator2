@@ -32,7 +32,7 @@ namespace WG2.Generation
 
                 var adjacentVertices = tokens.GetAdjacentVertices(thisToken).ToList();
 
-                int topK = settings.TopK >= adjacentVertices.Count ? 0 : adjacentVertices.Count;
+                int topK = settings.TopK >= adjacentVertices.Count ? adjacentVertices.Count : settings.TopK;
 
                 adjacentVertices.Sort((a, b) =>
                 {
