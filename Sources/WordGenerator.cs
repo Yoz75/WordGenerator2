@@ -184,7 +184,7 @@ public static class WordGenerator
 
     [Command(AppInterfaceName, "tic", "set iterative's tokenizer minimal count " +
         "(greater values can improve text when tokens look out of place)", "itk [value]")]
-    public static void SetIterativeMegreCount(int value)
+    public static void SetIterativeMergeCount(int value)
     {
         TokenizerSettings.ItTokenizerMinMergeCount = value;
     }
