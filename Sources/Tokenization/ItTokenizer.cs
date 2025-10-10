@@ -168,11 +168,11 @@ public class ItTokenizer : ITokenizer
             }
         }
 
-        settings.ItTokenizerTopK = settings.ItTokenizerTopK > pairsList.Count ?
+        var topK = settings.ItTokenizerTopK > pairsList.Count ?
             pairsList.Count : settings.ItTokenizerTopK;
 
         KeyValuePair<Pair, int> selectedPair = default;
-        int index = Random.Next(0, settings.ItTokenizerTopK);
+        int index = Random.Next(0, topK);
 
         selectedPair = pairsList[index];
 
