@@ -226,7 +226,6 @@ public class ItTokenizer : ITokenizer
             else
             {
                 token = new Token { Value = current.Value };
-                if(!pairCounts.ContainsKey(edge)) pairCounts[edge] = 0;
                 resultTokens[current.Value] = token;
                 result.AddVertex(token);
             }
