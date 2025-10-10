@@ -237,6 +237,7 @@ public class ItTokenizer : ITokenizer
             {
                 var prevToken = resultTokens[previous.Value];
                 var edge = (prevToken, token);
+                if(!pairCounts.ContainsKey(edge)) pairCounts[edge] = 0;
                 pairCounts[edge]++;
 
                 result.AddEdge(prevToken, token, pairCounts[edge]);
