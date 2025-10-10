@@ -14,6 +14,8 @@ namespace WG2.Generation
         
         public bool LogDebugInfo;
 
+        public int TopK = 5;
+
         public GeneratorSettings()
         {
         }

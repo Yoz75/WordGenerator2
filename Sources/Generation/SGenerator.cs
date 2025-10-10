@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 using System.Text;
 
 namespace WG2.Generation
@@ -11,7 +12,7 @@ namespace WG2.Generation
     {
         private Random Random = new Random();
 
-        public string Generate(GeneratorSettings settings, DirectedGraph<Token> tokens)
+        public string Generate(GeneratorSettings settings, DirectedGraph<Token, int> tokens)
         {
             StringBuilder sb = new StringBuilder();
             Token thisToken = null;
@@ -29,13 +30,21 @@ namespace WG2.Generation
 
                 sb.Append(thisToken.Value);
 
-                var adjacentVertices = tokens.GetAdjacentVertices(thisToken);
-                thisToken = adjacentVertices[Random.Next(0, adjacentVertices.Count)];
+                var adjacentVertices = tokens.GetAdjacentVertices(thisToken).ToList();
+
+                int topK = settings.TopK >= adjacentVertices.Count ? 0 : adjacentVertices.Count;
+
+                adjacentVertices.Sort((a, b) =>
+                {
+                    return a.Item2 - b.Item2;
+                });
+
+                thisToken = adjacentVertices[Random.Next(0, topK)].Item1;
             }
             return sb.ToString();
         }
 
-        private bool IsBadToken(Token token, DirectedGraph<Token> source)
+        private bool IsBadToken(Token token, DirectedGraph<Token, int> source)
         {
             if(token == null || source.GetAdjacentVertices(token).Count == 0)
             {
@@ -45,7 +54,7 @@ namespace WG2.Generation
             return false;
         }
 
-        private void PickRandom(ref Token token, DirectedGraph<Token> source)
+        private void PickRandom(ref Token token, DirectedGraph<Token, int> source)
         {
             //do while because we want to pick random token even if input token is valid
             do

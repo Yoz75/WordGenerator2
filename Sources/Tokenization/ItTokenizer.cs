@@ -51,9 +51,9 @@ public class ItTokenizer : ITokenizer
 
     private readonly Random Random = new Random();
 
-    public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string input)
+    public DirectedGraph<Token, int> Tokenize(TokenizerSettings settings, string input)
     {
-        DirectedGraph<Token> result = new DirectedGraph<Token>(settings.ResultCapacity);
+        DirectedGraph<Token, int> result = new(settings.ResultCapacity);
 
         // Init raw tokens as list of strings, but each string is a single character from input
         LinkedList<string> rawTokens = new LinkedList<string>(input.Select((ch, _) => { return ch.ToString(); }));
@@ -207,11 +207,13 @@ public class ItTokenizer : ITokenizer
         }
     }
 
-    private static void ToTokens(DirectedGraph<Token> result, LinkedList<string> rawTokens)
+    private static void ToTokens(DirectedGraph<Token, int> result, LinkedList<string> rawTokens)
     {
         LinkedListNode<string>? current = rawTokens.First;
 
         Dictionary<string, Token> resultTokens = new Dictionary<string, Token>();
+        Dictionary<(Token, Token), int> pairCounts = [];
+
 
         while(current != null)
         {
@@ -230,9 +232,14 @@ public class ItTokenizer : ITokenizer
 
             // If next node is not null, add edge
             LinkedListNode<string>? previous = current.Previous;
+
             if(previous != null)
             {
-                result.AddEdge(resultTokens[previous.Value], token);
+                var prevToken = resultTokens[previous.Value];
+                var edge = (prevToken, token);
+                pairCounts[edge]++;
+
+                result.AddEdge(prevToken, token, pairCounts[edge]);
             }
 
             // Move to next node

@@ -9,7 +9,7 @@ namespace WG2.Tokenization
     /// </summary>
     public class SDTokenizer : ITokenizer
     {
-        public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
+        public DirectedGraph<Token, int> Tokenize(TokenizerSettings settings, string text)
         {
             if(settings.MinimalTokenSize != settings.MaximalTokenSize)
             {
@@ -20,8 +20,9 @@ namespace WG2.Tokenization
             }
 
             int tokenSize = settings.MinimalTokenSize; // actually you can use settings.MaximalToken size, they are equals
-            DirectedGraph<Token> graph = new(settings.ResultCapacity);
-            Dictionary<string, Token> tokens = new Dictionary<string, Token>();
+            DirectedGraph<Token, int> graph = new(settings.ResultCapacity);
+            Dictionary<string, Token> tokens = [];
+            Dictionary<(Token, Token), int> pairCounts = [];
 
             for(int i = 0; i <= text.Length - tokenSize; i += tokenSize)
             {
@@ -45,12 +46,17 @@ namespace WG2.Tokenization
 
                 if(i < tokenSize) continue;
 
+                #region makeEdge
                 var prevTokenIndex = i - tokenSize;
 
                 string prevTokenValue = text.Substring(prevTokenIndex, tokenSize);
                 Token prevToken = tokens[prevTokenValue];
 
-                graph.AddEdge(prevToken, token);
+                var edge = (prevToken, token);
+                if(!pairCounts.ContainsKey(edge)) pairCounts[edge] = 0;
+                pairCounts[edge]++;
+
+                graph.AddEdge(prevToken, token, pairCounts[edge]); ;
 
                 const int baseFrequency = 20;
                 if(settings.LogDebugInfo)
@@ -60,6 +66,7 @@ namespace WG2.Tokenization
                         Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                     }
                 }
+                #endregion
             }
 
             if(settings.LogDebugInfo)

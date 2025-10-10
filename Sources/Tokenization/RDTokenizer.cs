@@ -10,13 +10,13 @@ namespace WG2.Tokenization
     /// </summary>
     public class RDTokenizer : ITokenizer
     {
-        public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
+        public DirectedGraph<Token, int> Tokenize(TokenizerSettings settings, string text)
         {
-            DirectedGraph<Token> result = new(settings.ResultCapacity);
+            DirectedGraph<Token, int> result = new(settings.ResultCapacity);
+            Dictionary<(Token, Token), int> pairCounts = [];
 
             for(int j = 0; j < settings.RandomIterations; j++)
             {
-
                 Dictionary<string, Token> tokens = new Dictionary<string, Token>();
 
                 Random random = new Random();
@@ -49,12 +49,17 @@ namespace WG2.Tokenization
                     //that means we generated at least 1 token
                     if(i < settings.MinimalTokenSize) goto FrameEnd; // GOTO \>_</
 
+                    #region makeEdge
                     var startPrevTokenIndex = i - prevTokenSize;
 
                     string prevTokenValue = text.Substring(startPrevTokenIndex, prevTokenSize);
                     Token prevToken = tokens[prevTokenValue];
 
-                    result.AddEdge(prevToken, token);
+                    var edge = (prevToken, token);
+                    if(!pairCounts.ContainsKey(edge)) pairCounts[edge] = 0;
+                    pairCounts[edge]++;
+
+                    result.AddEdge(prevToken, token, pairCounts[edge]);
 
                     const int baseFrequency = 20;
                     if(settings.LogDebugInfo)
@@ -64,6 +69,7 @@ namespace WG2.Tokenization
                             Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
                         }
                     }
+                    #endregion
 
                 FrameEnd:
                     i += tokenSize;

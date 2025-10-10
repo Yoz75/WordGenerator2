@@ -9,11 +9,11 @@ namespace WG2.Tokenization
     /// </summary>
     public class SSTokenizer : ITokenizer
     {
-        public DirectedGraph<Token> Tokenize(TokenizerSettings settings, string text)
+        public DirectedGraph<Token, int> Tokenize(TokenizerSettings settings, string text)
         {
-            DirectedGraph<Token> result = new(settings.ResultCapacity);
-
-            Dictionary<string, Token> tokens = new Dictionary<string, Token>();
+            DirectedGraph<Token, int> result = new(settings.ResultCapacity);
+            Dictionary<string, Token> tokens = [];
+            Dictionary<(Token, Token), int> pairCounts = [];
 
             string[] rawTokens = text.Split(' ');
 
@@ -42,7 +42,11 @@ namespace WG2.Tokenization
                 string prevTokenValue = rawTokens[startPrevTokenIndex];
                 Token prevToken = tokens[prevTokenValue];
 
-                result.AddEdge(prevToken, token);
+                var edge = (prevToken, token);
+                if(!pairCounts.ContainsKey(edge)) pairCounts[edge] = 0;
+                pairCounts[edge]++;
+
+                result.AddEdge(prevToken, token, pairCounts[edge]);
 
                 const int baseFrequency = 20;
                 if(settings.LogDebugInfo)

@@ -72,7 +72,7 @@ public static class WordGenerator
             for(int i = 0; i < WG2Settings.FunRecreationsCount; i++)
             {
                 result = Generator.Generate(GeneratorSettings, tokens);
-                tokens = Tokenizer.Tokenize(TokenizerSettings, result);
+                tokens = Tokenizer.Tokenize(TokenizerSettings, result.Replace("|", ""));
             }
         }
         else
@@ -93,6 +93,12 @@ public static class WordGenerator
     {
         TokenizerSettings.MinimalTokenSize = size;
         TokenizerSettings.MaximalTokenSize = size;
+    }
+
+    [Command(AppInterfaceName, "gik", "set generator's top K", "gik [value]")]
+    public static void SetGeneratorTopK(int value)
+    {
+        GeneratorSettings.TopK = value;
     }
 
     [Command(AppInterfaceName, "tmin", "set minimal token size", "tmin [value]")]

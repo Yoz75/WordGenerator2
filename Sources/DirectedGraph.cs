@@ -5,31 +5,31 @@ using System.Linq;
 namespace WG2
 {
 
-    public class DirectedGraph<T>
+    public class DirectedGraph<TVertexWeight, TEgdeWeight> where TVertexWeight : notnull
     {
-        private readonly Dictionary<T, List<T>> AdjacencyList;
+        private readonly Dictionary<TVertexWeight, List<(TVertexWeight, TEgdeWeight)>> AdjacencyList;
 
         private Random Random = new Random();
 
         public DirectedGraph()
         {
-            AdjacencyList = new Dictionary<T, List<T>>();
+            AdjacencyList = [];
         }
 
         public DirectedGraph(int capacity)
         {
-            AdjacencyList = new Dictionary<T, List<T>>(capacity);
+            AdjacencyList = [];
         }
 
-        public void AddVertex(T vertex)
+        public void AddVertex(TVertexWeight vertex)
         {
             if(!AdjacencyList.ContainsKey(vertex))
             {
-                AdjacencyList[vertex] = new List<T>();
+                AdjacencyList[vertex] = [];
             }
         }
 
-        public void AddEdge(T from, T to)
+        public void AddEdge(TVertexWeight from, TVertexWeight to, TEgdeWeight egde)
         {
             if(!AdjacencyList.ContainsKey(from))
             {
@@ -41,10 +41,10 @@ namespace WG2
                 AddVertex(to);
             }
 
-            AdjacencyList[from].Add(to);
+            AdjacencyList[from].Add((to, egde));
         }
 
-        public IList<T> GetAdjacentVertices(T vertex)
+        public IList<(TVertexWeight, TEgdeWeight)> GetAdjacentVertices(TVertexWeight vertex)
         {
             if(AdjacencyList.ContainsKey(vertex))
             {
@@ -54,7 +54,7 @@ namespace WG2
             throw new KeyNotFoundException($"Вершина '{vertex}' не найдена в графе.");
         }
 
-        public bool ContainsVertex(T vertex)
+        public bool ContainsVertex(TVertexWeight vertex)
         {
             return AdjacencyList.ContainsKey(vertex);
         }
@@ -64,7 +64,7 @@ namespace WG2
             return AdjacencyList.Count;
         }
 
-        public T GetRandom(int min, int max)
+        public TVertexWeight GetRandom(int min, int max)
         {
             if(max < min)
             {
