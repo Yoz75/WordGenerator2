@@ -28,7 +28,7 @@ public static class WGConsole
             _ => throw new System.ArgumentException($"Unknown color type {System.Enum.GetName(color)}!")
         };
 
-        AnsiConsole.MarkupLineInterpolated($"[{colorPrefix}]{message}[/]");
+        AnsiConsole.MarkupLine($"[{colorPrefix}]{Markup.Escape(message)}[/]");
     }
 
     public static void Write(string message, Color color = Color.White)
@@ -42,6 +42,6 @@ public static class WGConsole
             _ => throw new System.ArgumentException($"Unknown color type {System.Enum.GetName(color)}!")
         };
 
-        AnsiConsole.MarkupInterpolated($"[{colorPrefix}]{message}[/]");
+        AnsiConsole.Markup($"[{colorPrefix}]{Markup.Escape(message)}[/]");
     }
 }
