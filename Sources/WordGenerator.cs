@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Principal;
 using WG2.Generation;
+using WG2.Logging;
 using WG2.Tokenization;
 namespace WG2;
 
@@ -26,7 +27,7 @@ public static class WordGenerator
     private static GeneratorSettings GeneratorSettings = new();
     private static WG2Settings WG2Settings;
 
-    private static string SourcesDirectory = 
+    private static string SourcesDirectory =
         Path.Combine(Directory.GetCurrentDirectory(), SourceFilesFolder);
 
     private static bool DoesHaveAdminRights()
@@ -61,7 +62,7 @@ public static class WordGenerator
         }
         if(WG2Settings.LogDebugInfo)
         {
-            Logger.LogDebug($"Tokenizer: {Tokenizer}, Generator: {Generator}\n");
+            Logger.Log($"Tokenizer: {Tokenizer}, Generator: {Generator}\n", LogType.Debug);
         }
         var tokens = Tokenizer.Tokenize(TokenizerSettings, tokenizerInput);
 
@@ -82,10 +83,10 @@ public static class WordGenerator
 
         if(GeneratorSettings.LogDebugInfo)
         {
-            Logger.LogDebug(result);
-            Logger.LogMessage(result.Replace("|", ""));
+            Logger.Log(result, LogType.Debug);
+            WGConsole.WriteLine(result.Replace("|", ""));
         }
-        else Logger.LogMessage(result);
+        else WGConsole.WriteLine(result);
     }
 
     [Command(AppInterfaceName, "ts", "set token size (tmin = tmax)", "ts [value]")]
@@ -112,7 +113,7 @@ public static class WordGenerator
         GeneratorSettings.TokensGenerateCount = count;
 
     [Command(AppInterfaceName, "tr", "set generated tokens count", "tr [number in range 0..1]")]
-    public static void SetRandTokenChance(double chance) => 
+    public static void SetRandTokenChance(double chance) =>
         GeneratorSettings.RandomNextTokenChance = chance;
 
     [Command(AppInterfaceName, "tri", "set iterations of random tokenizer " +
@@ -136,7 +137,7 @@ public static class WordGenerator
     {
         if(!DoesHaveAdminRights())
         {
-            Logger.LogError("Run wg2 with admin rights to use hp argument!");
+            Logger.Log("Run wg2 with admin rights to use hp argument!", LogType.Error);
             return;
         }
         Process thisProcess = Process.GetCurrentProcess();

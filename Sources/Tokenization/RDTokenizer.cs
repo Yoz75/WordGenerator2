@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using WG2.Logging;
 
 namespace WG2.Tokenization
 {
@@ -66,7 +67,7 @@ namespace WG2.Tokenization
                     {
                         if(i % baseFrequency == 0)
                         {
-                            Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
+                            Logger.Log($"token: {token.Value} prevtoken: {prevToken.Value}", LogType.Debug);
                         }
                     }
                     #endregion
@@ -78,7 +79,7 @@ namespace WG2.Tokenization
 
                 if(settings.LogDebugInfo)
                 {
-                    Logger.LogDebug($"Total tokens created per iteration: {tokens.Count}");
+                    Logger.Log($"Total tokens created per iteration: {tokens.Count}", LogType.Debug);
                 }
             }
 

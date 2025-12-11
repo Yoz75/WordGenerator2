@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using WG2.Logging;
 
 namespace WG2.Tokenization
 {
@@ -53,14 +54,14 @@ namespace WG2.Tokenization
                 {
                     if(i % baseFrequency == 0)
                     {
-                        Logger.LogDebug($"token: {token.Value} prevtoken: {prevToken.Value}");
+                        Logger.Log($"token: {token.Value} prevtoken: {prevToken.Value}", LogType.Debug);
                     }
                 }
             }
 
             if(settings.LogDebugInfo)
             {
-                Logger.LogDebug($"Total tokens created: {result.Count}");
+                Logger.Log($"Total tokens created: {result.Count}", LogType.Debug);
             }
             return result;
         }

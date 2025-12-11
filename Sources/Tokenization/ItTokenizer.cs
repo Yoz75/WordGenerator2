@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WG2.Logging;
 
 namespace WG2.Tokenization;
 
@@ -62,13 +63,13 @@ public class ItTokenizer : ITokenizer
         {
             if(settings.LogDebugInfo)
             {
-                Logger.LogDebug($"\n----------------------------------------");
-                Logger.LogDebug($"Iteration: {i}");
+                Logger.Log($"\n----------------------------------------", LogType.Debug);
+                Logger.Log($"Iteration: {i}", LogType.Debug);
             }
             else if(i % 100 == 0)
             {
-                Logger.LogMessage($"\n----------------------------------------");
-                Logger.LogMessage($"Iteration: {i}");
+                WGConsole.WriteLine($"\n----------------------------------------");
+                WGConsole.WriteLine($"Iteration: {i}");
             }
 
             Dictionary<Pair, int> pairs = new Dictionary<Pair, int>();
@@ -95,7 +96,7 @@ public class ItTokenizer : ITokenizer
                     }
 
                     if(settings.LogDebugInfo)
-                        Logger.LogDebug($"pair: {pair.Left}|{pair.Right} count: {pairs[pair]}");
+                        Logger.Log($"pair: {pair.Left}|{pair.Right} count: {pairs[pair]}", LogType.Debug);
                 }
 
                 // Move to next node
@@ -104,12 +105,14 @@ public class ItTokenizer : ITokenizer
 
             if(pairs.Count <= 2)
             {
-                Logger.LogError("there is no more tokens left! (probably tmax is too big)");
+                // Red color is meaning something like error, white usually used for some slop info. This isn't slop and isn't an error
+                // More like an "important message", so I use blue color here
+                WGConsole.WriteLine("there is no more tokens left! (probably tmax is too big)", Color.Blue);
                 break;
             }
 
             if(settings.LogDebugInfo)
-                Logger.LogDebug($"Pairs count: {pairs.Count}\n");
+                Logger.Log($"Pairs count: {pairs.Count}\n", LogType.Debug);
 
             Pair selectedPair = SelectPair(settings, pairs);
 
@@ -122,8 +125,7 @@ public class ItTokenizer : ITokenizer
 
         if(settings.LogDebugInfo)
         {
-            Logger.LogDebug("Tokenization completed. " +
-                $"Total tokens created: {result.Count()}");
+            Logger.Log("Tokenization completed. Total tokens created: {result.Count()}", LogType.Debug);
         }
 
         return result;
@@ -144,9 +146,9 @@ public class ItTokenizer : ITokenizer
 
         if(pairsList.Count <= 0)
         {
-            Logger.LogError($"Failed to find suitable token less than {settings.MaximalTokenSize + 1} " +
-            $"and more frequent than {settings.ItTokenizerMinMergeCount}. Tokenization completed ahead of schedule " +
-            $"(that's normal for small input or big tis values)");
+            WGConsole.WriteLine($"Failed to find suitable token less than {settings.MaximalTokenSize + 1} " +
+                $"and more frequent than {settings.ItTokenizerMinMergeCount}. Tokenization completed ahead of schedule " +
+                $"(that's normal for small input or big tis values)", Color.Blue);
 
             return default;
         }
@@ -164,7 +166,7 @@ public class ItTokenizer : ITokenizer
         {
             foreach(var pair in pairsList)
             {
-                Logger.LogDebug($"sorted pair: {pair.Key.Left}|{pair.Key.Right} count: {pair.Value}");
+                Logger.Log($"sorted pair: {pair.Key.Left}|{pair.Key.Right} count: {pair.Value}", LogType.Debug);
             }
         }
 
@@ -178,7 +180,7 @@ public class ItTokenizer : ITokenizer
 
         if(settings.LogDebugInfo)
         {
-            Logger.LogDebug($"Selected built pair: {selectedPair.Key.FullString}\n");
+            Logger.Log($"Selected built pair: {selectedPair.Key.FullString}\n", LogType.Debug);
         }
 
         return selectedPair.Key;
