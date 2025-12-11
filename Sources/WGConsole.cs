@@ -30,4 +30,18 @@ public static class WGConsole
 
         AnsiConsole.MarkupLineInterpolated($"[{colorPrefix}]{message}[/]");
     }
+
+    public static void Write(string message, Color color = Color.White)
+    {
+        string colorPrefix = color switch
+        {
+            Color.White => "white",
+            Color.Red => "red3",
+            Color.Green => "green4",
+            Color.Blue => "dodgerblue3",
+            _ => throw new System.ArgumentException($"Unknown color type {System.Enum.GetName(color)}!")
+        };
+
+        AnsiConsole.MarkupInterpolated($"[{colorPrefix}]{message}[/]");
+    }
 }
