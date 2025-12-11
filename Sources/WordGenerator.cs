@@ -190,6 +190,27 @@ public static class WordGenerator
         TokenizerSettings.ItTokenizerMinMergeCount = value;
     }
 
+    [Command(AppInterfaceName, "list", "list all available source files", "list")]
+    public static void ListSourceFiles()
+    {
+        if(!Directory.Exists(SourcesDirectory))
+        {
+            Directory.CreateDirectory(SourcesDirectory);
+            Logger.Log("Sources directory does not exists, but we call list command... Created a new one!", LogType.Warning);
+        }
+
+        foreach(var entry in Directory.EnumerateFiles(SourcesDirectory))
+        {
+            var fileInfo = new FileInfo(entry);
+            var rawSize = fileInfo.Length;
+
+            string size = Size2String(rawSize);
+
+            WGConsole.Write(fileInfo.Name + ' ', Color.White);
+            WGConsole.WriteLine(size, Color.Green);
+        }
+    }
+
     [Command(AppInterfaceName, "separate", "set new text separator strategy (tokenizer).\n" +
         "Available tokenizers:\n" +
         "space -- each word is a token\n" +
@@ -214,5 +235,32 @@ public static class WordGenerator
                 Tokenizer = new SDTokenizer();
                 break;
         }
+    }
+
+    /// <summary>
+    /// Convert size in bytes to short string. E.g convert 1212B to 1.2KB
+    /// </summary>
+    /// <param name="fileSize">The file size in bytes</param>
+    /// <returns></returns>
+    private static string Size2String(in long fileSize, in string roundFormat = "0.00")
+    {
+        /// Maximal count of digits in file size. If there's more digits, greater suffix will be selected
+        const int maxDigits = 4;
+
+        string[] availableSuffixes = ["B", "KB", "MB", "GB", "TB"];
+
+        string suffix;
+        int suffixId = 0;
+
+        double newSize = fileSize;
+        double tenPower = Math.Pow(10, maxDigits - 1);
+
+        while(newSize > tenPower && suffixId < availableSuffixes.Length - 1)
+        {
+            suffixId++;
+            newSize /= tenPower;
+        }
+
+        return newSize.ToString(roundFormat) + availableSuffixes[suffixId];
     }
 }
